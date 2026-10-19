@@ -1,4 +1,3 @@
-# motor-telemetry-simulator
 # Motor Telemetry Simulator
 
 Physics-based DC motor simulation, synthetic telemetry generation, and anomaly detection in Python.

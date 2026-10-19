@@ -1,50 +1,42 @@
 # Motor Telemetry Simulator
 
-Physics-based DC motor simulation, synthetic telemetry generation, and anomaly detection in Python.
+A Python project for simulating DC motor behavior and experimenting with overload detection.
 
-## Project Overview
+I started this project to better understand how motor current, RPM, mechanical load, and supply voltage interact in a robotic system.
 
-This project explores model-based fault detection for a two-motor robotic system. It simulates DC motor electrical and mechanical behavior, generates synthetic telemetry, and evaluates rule-based overload detection algorithms.
+The current version simulates two DC motors using electrical and mechanical equations, with forward Euler integration. It also includes battery voltage sag, sensor noise, motor parameter variation, and injected mechanical overloads.
 
-The long-term goal is to connect the diagnostic system to real embedded hardware and validate its behavior using physical measurements.
+## Overload detection
 
-## Technical Approach
+Instead of detecting faults using fixed RPM limits, the program compares simulated motor measurements against a reference motor model.
 
-The simulator models motor current, angular velocity, electromagnetic torque, friction, mechanical load, and battery voltage sag.
+An overload is suspected when the motor runs significantly slower than expected while drawing more current.
 
-It includes motor parameter variation, measurement noise, individual and simultaneous motor overloads, and reference motor models used to identify deviations from expected behavior.
+Experiment 8.5 compares two detector configurations using the same simulated telemetry.
 
-The simulation uses forward Euler numerical integration with a 2 ms time step.
+| Detector | Detected events |
+|---|---|
+| Baseline (A) | 60/70 (85.7%) |
+| Tuned (B) | 70/70 (100%) |
 
-## Experiment 8.5 — A/B Detector Comparison
+The tuned detector was selected using one set of simulation seeds and tested using a separate validation set.
 
-Two overload detectors were evaluated on the same simulated measurement sequences.
+**These results are from simulation only.** The motor parameters are estimates, and the detector has not been tested with physical motors.
 
-| Detector | Detected events | Detection rate |
-|---|---|---|
-| A — Baseline | 60/70 | 85.7% |
-| B — Tuned | 70/70 | 100% |
+## Running the experiment
 
-Detector B was selected using a tuning dataset and evaluated using a separate set of random seeds.
+Requires Python 3. No external libraries are needed.
 
-These results apply only to the synthetic validation scenarios tested.
+```bash
+python experiment_08_5_detector_comparison.py
+```
 
-## Limitations
+## Current limitations and next steps
 
-Motor parameters are engineering estimates, not experimentally calibrated values. The system has not yet been validated against physical motors.
+The simulation is currently contained in a single Python file. My next step is to separate the motor model, telemetry generation, and detection logic into independent modules.
 
-Real-world performance may be affected by battery behavior, motor drivers, mechanical characteristics, sensor accuracy, environmental conditions, and previously unseen failure modes.
-
-## Running the Experiment
-
-Requires Python 3 and uses only the Python standard library.
-
-Run `python experiment_08_5_detector_comparison.py` from the repository directory.
-
-## Future Development
-
-Planned work includes modular software architecture, automated testing, improved documentation, physical motor calibration, and real-time telemetry integration with ESP32-based robotic systems.
+I also plan to compare simulated telemetry against measurements from real DC motors before using the detector in an embedded robotic system.
 
 ## License
 
-MIT License.
+MIT.
